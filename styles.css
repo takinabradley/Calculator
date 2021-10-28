@@ -1,3 +1,35 @@
+button {
+    display: inline-block;
+    border: none;
+    margin: 0;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.2);
+    font-family: sans-serif;
+    font-size: 24px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 250ms ease-in-out, 
+                transform 150ms ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+button:hover,
+button:focus {
+    background: rgba(98, 158, 182, .6);
+}
+
+button:focus {
+    outline: none;
+
+}
+
+button:active {
+    transform: scale(0.99);
+}
+
+/*clean button styling*/
+
 * {
 	box-sizing: border-box;
 	margin: 0;
@@ -44,6 +76,7 @@ body {
 	height: 100%;
 }
 
+
 .numpad {
 	display: flex;
 	flex-direction: column;
@@ -56,6 +89,7 @@ body {
 }
 
 .row {	
+	flex-direction: row-reverse;
 	display: flex;
 	flex: 1;
 }
@@ -80,7 +114,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
-		background-color: rgba(255, 255, 255, 0.5);
+	background-color: rgba(255, 255, 255, 0.5);
 	height: 100%;
 	font-size: 28px;
 	font-weight: 100;
