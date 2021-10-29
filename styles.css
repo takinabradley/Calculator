@@ -1,33 +1,4 @@
-button {
-    display: inline-block;
-    border: none;
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.2);
-    font-family: sans-serif;
-    font-size: 24px;
-    cursor: pointer;
-    text-align: center;
-    transition: background 250ms ease-in-out, 
-                transform 150ms ease;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
 
-button:hover,
-button:focus {
-    background: rgba(98, 158, 182, .6);
-}
-
-button:focus {
-    outline: none;
-
-}
-
-button:active {
-    transform: scale(0.99);
-}
-
-/*clean button styling*/
 
 * {
 	box-sizing: border-box;
@@ -70,51 +41,82 @@ body {
 	padding: 0 10px 0 10px;;
 }
 
-.buttons {
-	display: flex;
-	height: 100%;
-}
-
-
-.numpad {
-	display: flex;
-	flex-direction: column;
-	flex: 3;
-	height: 100%;
-}
-
-.num {
-	background-color: rgba(255, 255, 255, 0.8);
-}
-
 .row {	
 	flex-direction: row-reverse;
 	display: flex;
 	flex: 1;
 }
 
-.clear {
-	font-size: 32px;
-	font-weight: 100;
-	background-color: rgba(255, 255, 255, 0.5);
+/* button styling below this point */
+.buttons {
+	display: flex;
+	height: 100%;
+	flex-direction: column;
 }
 
-.key {
-	display: flex;
+button {
+  display: flex;
+  border: none;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.2);
+  font-family: sans-serif;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out, 
+              transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 	justify-content: center;
 	align-items: center;
 	flex: 1;
 	border: 1px solid lightgray;
 }
 
-
-
-.right-buttons {
-	display: flex;
-	flex-direction: column;
-	flex: 1;
-	background-color: rgba(255, 255, 255, 0.5);
-	height: 100%;
-	font-size: 28px;
-	font-weight: 100;
+button:hover,
+button:focus {
+    background: rgba(98, 158, 182, .6);
 }
+
+button:focus {
+    outline: none;
+
+}
+
+button:active {
+    transform: scale(0.96);
+}
+
+.num {
+	background-color: rgba(255, 255, 255, 0.8);
+}
+
+.function {
+		background-color: rgba(255, 255, 255, 0.5);
+}
+
+.clear {
+	flex: 3.01;
+}
+
+.clear:active {
+    transform: scale(.99);
+}
+
+.delete {
+		background-color: rgba(255, 255, 255, 0.8);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
