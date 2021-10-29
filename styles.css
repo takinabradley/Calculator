@@ -107,6 +107,10 @@ button:active {
 		background-color: rgba(255, 255, 255, 0.8);
 }
 
+.used {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
 
 
 

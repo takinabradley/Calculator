@@ -9,6 +9,7 @@ function subtract (array) {
   }, null);
 }
 
+
 function multiply (array) {
   return array.reduce( (product, num) => {
     if (product === null) return product = num;
@@ -16,12 +17,14 @@ function multiply (array) {
   }, null);
 }
 
+
 function divide (array) {
   return array.reduce( (quotient, num) => {
     if (quotient === null) return quotient = num;
     return quotient / num;
   }, null);
 }
+
 
 function operate (operator, num1, num2) {
   numArray = [num1, num2];
@@ -32,18 +35,33 @@ function operate (operator, num1, num2) {
   if (operator === '/') return divide(numArray);
 }
 
-function numInput() {
-  display = document.querySelector('.display');
-  numPad = document.querySelectorAll('.num');
-  
-  numPad.forEach( num => num.addEventListener('click', (num) => {
-    numContent = num.target.textContent;
-    
-    if (display.textContent.includes('.') && numContent === '.') return;
-    display.textContent += numContent;
-    console.log(display.textContent);
-  }));
-  
+
+function getDisplayContent () {
+  return document.querySelector('.display').textContent;
 }
 
-numInput();
+function clearDisplayContent () {
+  document.querySelector('.display').textContent = '';
+  document.querySelector('.decimal').classList.remove('used');
+  /*must remove used class to ensure the decimal can be used as first input 
+    after being cleared */
+}
+
+function allowNumInput() {
+  const numPad = document.querySelectorAll('.num');
+  
+  numPad.forEach( num => num.addEventListener('click', (num) => {
+    const display = document.querySelector('.display');
+    const decimal = document.querySelector('.decimal');
+    const numContent = num.target.textContent;
+
+    if (decimal.classList.contains('used') && numContent === '.') return;
+    
+    display.textContent += numContent;
+    display.textContent.includes('.') ? decimal.classList.add('used') : 
+                                        decimal.classList.remove('used');
+  }));
+}
+
+
+allowNumInput();
