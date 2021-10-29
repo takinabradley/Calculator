@@ -57,8 +57,20 @@ function allowNumInput() {
     const decimal = document.querySelector('.decimal');
     const negative = document.querySelector('.negative');
     const numContent = num.target.textContent;
+    const deleteBtn = document.querySelector('.delete');
+    //deleteBtn is part of numpad, as it's functionality makes most sense here.
+    
+    if (numContent === 'DEL') {
+      display.textContent = display.textContent.slice(0, -1);
+      display.textContent.includes('.') ? decimal.classList.add('used') : 
+                                          decimal.classList.remove('used');
+      return;
+    }
+    /*deletes last character. Must include decimal check to ensure decimal isn't
+      deactivated prematurely*/
     
     if (decimal.classList.contains('used') && numContent === '.') return;
+    //doesn't allow 2nd use of decimal button.
     
     if (!negative.classList.contains('active') && numContent === '+/-') {
       display.textContent = display.textContent.padStart(display.textContent.length + 1, '-');
@@ -69,13 +81,17 @@ function allowNumInput() {
       negative.classList.remove('active');
       return;
     }
+    /*appends/removes '-' from the front of the display. Overrides default behavior
+      of adding the button's textContent.*/
+    
     
     display.textContent += numContent;
     display.textContent.includes('.') ? decimal.classList.add('used') : 
                             decimal.classList.remove('used');
   }));
 }
-
+//having trouble with assigning display to equal display.textContent.
+//Theory: if textContent === '', display = null. This might prohibit += operations.
 
 
 allowNumInput();
