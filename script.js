@@ -26,9 +26,7 @@ function divide (array) {
 }
 
 
-function operate (operator, num1, num2) {
-  numArray = [num1, num2];
-  
+function operate (operator, numArray) {
   if (operator === '+') return add(numArray);
   if (operator === '-') return subtract(numArray);
   if (operator === 'x') return multiply(numArray);
@@ -37,7 +35,7 @@ function operate (operator, num1, num2) {
 
 
 function getDisplayContent () {
-  return document.querySelector('.display').textContent;
+  return parseFloat(document.querySelector('.display').textContent);
 }
 
 
@@ -59,6 +57,11 @@ function allowNumInput() {
     const numContent = num.target.textContent;
     const deleteBtn = document.querySelector('.delete');
     //deleteBtn is part of numpad, as it's functionality makes most sense here.
+    
+    if (display.classList.contains('output')) {
+      display.classList.remove('output');
+      clearDisplayContent();
+    }
     
     if (numContent === 'DEL') {
       display.textContent = display.textContent.slice(0, -1);
@@ -93,8 +96,63 @@ function allowNumInput() {
 //having trouble with assigning display to equal display.textContent.
 //Theory: if textContent === '', display = null. This might prohibit += operations.
 
+function allowFunctionInput () {
+  const functionBtns = document.querySelectorAll('.function');
+  const display = document.querySelector('.display');
+  let numArray= []
+  let operator = '';
+  let lastOperator;
+  let lastSolution;
+  
+  functionBtns.forEach( btn => btn.addEventListener('click', (btn) => {
+    
+    operator = btn.target.textContent;  
+    
+    if ( operator === '/' || operator === 'x' || operator === '-' || operator === '+') {
+      if (numArray.length === 0) {
+        
+        numArray[0] = getDisplayContent();
+        clearDisplayContent();
+        nextOperator = operator;
+        //lastSolution = operate(operator, numArray);
+        //asigns first number of array
+      } else if (numArray.length === 1) {
+        numArray[1] = getDisplayContent();
+        clearDisplayContent();
+        
+        display.textContent = operate(nextOperator, numArray);
+        display.classList.add('output');
+        
+        lastSolution = operate(nextOperator, numArray);
+        nextOperator = operator;
+        //assigns second number of array, outputs solution, then saves it as last solution
+      } else if (numArray.length === 2) {
+        numArray[0] = lastSolution;
+        
+        if (!display.classList.contains('output')) {
+          numArray[1] = getDisplayContent();
+        }
+        
+        display.textContent = operate(nextOperator, numArray);
+        display.classList.add('output');
+        
+        lastSolution = operate(nextOperator, numArray);
+        nextOperator = operator;
+        //assigns 1st number to last solution, 2nd number to last number used or 
+        //user input, outputs solution, then saves it as last solution.
+      }
+    } else if (operator === '=') {
+      return;
+    } else if (operator ==='CLEAR') {
+      return;
+    }
+    console.log(numArray);
+    console.log(operator);
+  }));
+}
 
 allowNumInput();
+allowFunctionInput();
 
 //input1 -> operator -> input2 -> operator/equals => input1 -> output input1 ...repeat
 //can use leftover input2 to continue doing the operation on every equal operator press.
