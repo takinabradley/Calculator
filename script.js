@@ -101,8 +101,8 @@ function allowFunctionInput () {
   const display = document.querySelector('.display');
   let numArray= []
   let operator = '';
-  let lastOperator;
-  let lastSolution;
+  let nextOperator = '';
+  let lastSolution = '';
   
   functionBtns.forEach( btn => btn.addEventListener('click', (btn) => {
     
@@ -112,6 +112,9 @@ function allowFunctionInput () {
       if (numArray.length === 0) {
         
         numArray[0] = getDisplayContent();
+        
+        if (numArray.includes(NaN)) return numArray = [];
+        
         clearDisplayContent();
         nextOperator = operator;
         //lastSolution = operate(operator, numArray);
@@ -142,12 +145,33 @@ function allowFunctionInput () {
         //user input, outputs solution, then saves it as last solution.
       }
     } else if (operator === '=') {
+      if (numArray.length === 1) {
+        numArray[1] = getDisplayContent();
+        
+        display.textContent = operate(nextOperator, numArray);
+        display.classList.add('output');
+        lastSolution = operate(nextOperator, numArray);
+        numArray.length = 0;
+      } else if (numArray.length === 2) {
+        numArray[0] = lastSolution;
+        numArray[1] = getDisplayContent();
+        console.log(numArray);
+        display.textContent = operate(nextOperator, numArray);
+        display.classList.add('output');
+        
+        lastSolution = operate(nextOperator, numArray);
+        nextOperator = nextOperator;
+        numArray.length = 0;
+      }
       return;
-    } else if (operator ==='CLEAR') {
+    } else if (operator === 'CLEAR') {
+      numArray.length = 0;
+      operator = '';
+      nextOperator = '';
+      lastSolution = '';
+      clearDisplayContent();
       return;
     }
-    console.log(numArray);
-    console.log(operator);
   }));
 }
 
