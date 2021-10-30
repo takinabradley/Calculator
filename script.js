@@ -175,8 +175,16 @@ function allowFunctionInput () {
   }));
 }
 
+function keyboardInput() {
+  window.addEventListener('keydown', (num) => {
+   key = document.querySelector(`button[data-key="${num.keyCode}"]`);
+   key.click();
+  });
+}
+
 allowNumInput();
 allowFunctionInput();
+keyboardInput();
 
 //input1 -> operator -> input2 -> operator/equals => input1 -> output input1 ...repeat
 //can use leftover input2 to continue doing the operation on every equal operator press.
