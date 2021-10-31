@@ -121,6 +121,8 @@ function allowFunctionInput () {
         //asigns first number of array
       } else if (numArray.length === 1) {
         numArray[1] = getDisplayContent();
+        
+        if (numArray.includes(NaN)) return numArray.length = 1;
         clearDisplayContent();
         
         display.textContent = operate(nextOperator, numArray);
@@ -134,8 +136,9 @@ function allowFunctionInput () {
         
         if (!display.classList.contains('output')) {
           numArray[1] = getDisplayContent();
-        }
-        
+          if (numArray.includes(NaN)) return;
+        } 
+
         display.textContent = operate(nextOperator, numArray);
         display.classList.add('output');
         
@@ -147,6 +150,7 @@ function allowFunctionInput () {
     } else if (operator === '=') {
       if (numArray.length === 1) {
         numArray[1] = getDisplayContent();
+        if (numArray.includes(NaN)) return numArray.length = 1;
         
         display.textContent = operate(nextOperator, numArray);
         display.classList.add('output');
