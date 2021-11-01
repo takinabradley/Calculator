@@ -46,6 +46,12 @@ function clearDisplayContent () {
     after being cleared */
 }
 
+function displayOutput(nextOperator, numArray) {
+  const display = document.querySelector('.display');
+  
+  display.classList.add('output');
+  return display.textContent = operate(nextOperator, numArray);
+}
 
 function allowNumInput() {
   const numPad = document.querySelectorAll('.num');
@@ -117,7 +123,6 @@ function allowFunctionInput () {
         
         clearDisplayContent();
         nextOperator = operator;
-        //lastSolution = operate(operator, numArray);
         //asigns first number of array
       } else if (numArray.length === 1) {
         numArray[1] = getDisplayContent();
@@ -125,10 +130,7 @@ function allowFunctionInput () {
         if (numArray.includes(NaN)) return numArray.length = 1;
         clearDisplayContent();
         
-        display.textContent = operate(nextOperator, numArray);
-        display.classList.add('output');
-        
-        lastSolution = operate(nextOperator, numArray);
+        lastSolution = displayOutput(nextOperator, numArray);//operate(nextOperator, numArray);
         nextOperator = operator;
         //assigns second number of array, outputs solution, then saves it as last solution
       } else if (numArray.length === 2) {
@@ -139,10 +141,7 @@ function allowFunctionInput () {
           if (numArray.includes(NaN)) return;
         } 
 
-        display.textContent = operate(nextOperator, numArray);
-        display.classList.add('output');
-        
-        lastSolution = operate(nextOperator, numArray);
+        lastSolution = displayOutput(nextOperator, numArray);//operate(nextOperator, numArray);
         nextOperator = operator;
         //assigns 1st number to last solution, 2nd number to last number used or 
         //user input, outputs solution, then saves it as last solution.
@@ -150,23 +149,21 @@ function allowFunctionInput () {
     } else if (operator === '=') {
       if (numArray.length === 1) {
         numArray[1] = getDisplayContent();
-        if (numArray.includes(NaN)) return numArray.length = 1;
         
-        display.textContent = operate(nextOperator, numArray);
-        display.classList.add('output');
-        lastSolution = operate(nextOperator, numArray);
+        if (numArray.includes(NaN)) return numArray.length = 1;
+
+        lastSolution = displayOutput(nextOperator, numArray); //operate(nextOperator, numArray);
         numArray.length = 0;
       } else if (numArray.length === 2) {
         numArray[0] = lastSolution;
         numArray[1] = getDisplayContent();
         console.log(numArray);
-        display.textContent = operate(nextOperator, numArray);
-        display.classList.add('output');
         
         lastSolution = operate(nextOperator, numArray);
         nextOperator = nextOperator;
         numArray.length = 0;
       }
+      
       return;
     } else if (operator === 'CLEAR') {
       numArray.length = 0;
