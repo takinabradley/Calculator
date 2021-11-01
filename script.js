@@ -159,7 +159,7 @@ function allowFunctionInput () {
         numArray[1] = getDisplayContent();
         console.log(numArray);
         
-        lastSolution = operate(nextOperator, numArray);
+        lastSolution = displayOutput(nextOperator, numArray);
         nextOperator = nextOperator;
         numArray.length = 0;
       }
