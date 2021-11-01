@@ -130,8 +130,18 @@ function allowFunctionInput () {
         if (numArray.includes(NaN)) return numArray.length = 1;
         clearDisplayContent();
         
-        lastSolution = displayOutput(nextOperator, numArray);//operate(nextOperator, numArray);
-        nextOperator = operator;
+        if (isNaN(operate(nextOperator, numArray))) {
+          display.textContent = "No way, José"
+          display.classList.add('output');
+          numArray.length = 0;
+          operator = '';
+          nextOperator = '';
+          lastSolution = '';
+          return;
+        } else {
+          lastSolution = displayOutput(nextOperator, numArray);//operate(nextOperator, numArray);
+          nextOperator = operator;
+        }
         //assigns second number of array, outputs solution, then saves it as last solution
       } else if (numArray.length === 2) {
         numArray[0] = lastSolution;
@@ -140,9 +150,19 @@ function allowFunctionInput () {
           numArray[1] = getDisplayContent();
           if (numArray.includes(NaN)) return;
         } 
-
-        lastSolution = displayOutput(nextOperator, numArray);//operate(nextOperator, numArray);
-        nextOperator = operator;
+        
+        if (isNaN(operate(nextOperator, numArray))) {
+          display.textContent = "No way, José"
+          display.classList.add('output');
+          numArray.length = 0;
+          operator = '';
+          nextOperator = '';
+          lastSolution = '';
+          return;
+        } else {
+          lastSolution = displayOutput(nextOperator, numArray);//operate(nextOperator, numArray);
+          nextOperator = operator;
+        }
         //assigns 1st number to last solution, 2nd number to last number used or 
         //user input, outputs solution, then saves it as last solution.
       }
@@ -151,17 +171,39 @@ function allowFunctionInput () {
         numArray[1] = getDisplayContent();
         
         if (numArray.includes(NaN)) return numArray.length = 1;
-
-        lastSolution = displayOutput(nextOperator, numArray); //operate(nextOperator, numArray);
-        numArray.length = 0;
+        
+        if (isNaN(operate(nextOperator, numArray))) {
+          display.textContent = "No way, José"
+          display.classList.add('output');
+          numArray.length = 0;
+          operator = '';
+          nextOperator = '';
+          lastSolution = '';
+          return;
+        } else {
+          lastSolution = displayOutput(nextOperator, numArray); //operate(nextOperator, numArray);
+          numArray.length = 0;
+        }
+        
       } else if (numArray.length === 2) {
         numArray[0] = lastSolution;
         numArray[1] = getDisplayContent();
         console.log(numArray);
         
-        lastSolution = displayOutput(nextOperator, numArray);
-        nextOperator = nextOperator;
-        numArray.length = 0;
+        if (isNaN(operate(nextOperator, numArray))) {
+          display.textContent = "No way, José"
+          display.classList.add('output');
+          numArray.length = 0;
+          operator = '';
+          nextOperator = '';
+          lastSolution = '';
+          return;
+        } else {
+          lastSolution = displayOutput(nextOperator, numArray);
+          nextOperator = nextOperator;
+          numArray.length = 0;
+        }
+        
       }
       
       return;
