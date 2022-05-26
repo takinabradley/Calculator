@@ -1,56 +1,40 @@
 <!DOCTYPE html>
-<html lang="en_US">
+<html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>Calculator</title>
-	<link rel="stylesheet" href="styles.css">
-	<script src="script.js" defer></script>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<script src="index.js" defer></script>
+	<title>Document</title>
 </head>
 
 <body>
-
-	<div id="calc">
-		<div class="display"></div>
-		
-		<div class="buttons">
-		
-					<div class="row">
-						<button data-key="111" class="divide function">/</button>
-						<button data-key="46" class="delete num">DEL</button>
-						<button class="clear function">CLEAR</button>
-					</div>
-					
-					<div class="row">
-						<button data-key="106" class="multiply function">x</button>
-						<button data-key="105" class="num-9 num">9</button>
-						<button data-key="104" class="num-8 num">8</button>
-						<button data-key="103" class="num-7 num">7</button>
-					</div>
-					
-					<div class="row">
-						<button data-key="109" class="subtract function">-</button>
-						<button data-key="102" class="num-6 num">6</button>
-						<button data-key="101" class="num-5 num">5</button>
-						<button data-key="100" class="num-4 num">4</button>
-					</div>
-					
-					<div class="row">
-						<button data-key="107" class="add function">+</button>
-						<button data-key="99" class="num-3 num">3</button>
-						<button data-key="98" class="num-2 num">2</button>
-						<button data-key="97" class="num-1 num">1</button>
-					</div>
-
-					<div class="row">
-						<button data-key="187"class="equals function">=</button>
-						<button data-key="110"class="decimal num">.</button>
-						<button data-key="96"class="num-0 num">0</button>
-						<button class="negative num">+/-</button>
-					</div>
+	<div class="calc">
+		<div class="screen"></div>
+		<div class="numbers">
+			<button>0</button>
+			<button>1</button>
+			<button>2</button>
+			<button>3</button>
+			<button>4</button>
+			<button>5</button>
+			<button>6</button>
+			<button>7</button>
+			<button>8</button>
+			<button>9</button>
+			<button>.</button>
 		</div>
+		<div class="operators">
+			<button class="equals">=</button>
+			<button class="plus">+</button>
+			<button class="minus">-</button>
+			<button class="multiply">*</button>
+			<button class="divide">/</button>
+		</div>
+		<button class="clear">CLEAR</button>
+		<button class="delete">DEL</button>
 	</div>
-	
 </body>
 
 </html>

@@ -1,235 +1,184 @@
-function add (array) {
-  return array.reduce( (sum, num) => sum + num, 0);
-}
+const calculator = (function () {
+  let firstInput = null;
+  let secondInput = null;
+  let operator = null;
 
-function subtract (array) {
-  return array.reduce( (difference, num) => {
-    if (difference === null) return difference = num;
-    return difference - num;
-  }, null);
-}
+  function add(...nums) {
+    return nums.reduce((total, num) => {
+      return total + num;
+    }, 0);
+  }
 
+  function subtract(...nums) {
+    return nums.reduce((total, num, index) => {
+      if (index === 0) return total;
+      return total - num;
+    }, nums[0]);
+  }
 
-function multiply (array) {
-  return array.reduce( (product, num) => {
-    if (product === null) return product = num;
-    return product * num;
-  }, null);
-}
+  function divide(...nums) {
+    return nums.reduce((total, num, index) => {
+      if (index === 0) return total;
+      return total / num;
+    }, nums[0]);
+  }
 
+  function multiply(...nums) {
+    return nums.reduce((total, num) => {
+      return total * num;
+    }, 1);
+  }
 
-function divide (array) {
-  return array.reduce( (quotient, num) => {
-    if (quotient === null) return quotient = num;
-    return quotient / num;
-  }, null);
-}
+  function operate(operator, ...nums) {
+    if (operator === "+") {
+      return add(...nums);
+    } else if (operator === "-") {
+      return subtract(...nums);
+    } else if (operator === "*") {
+      return multiply(...nums);
+    } else if (operator === "/") {
+      return divide(...nums);
+    }
+  }
 
+  // Logic for when to actually call operate, not mixed into DOM code
+  function input(userInput) {
+    console.log('userInput:', userInput)
 
-function operate (operator, numArray) {
-  if (operator === '+') return add(numArray);
-  if (operator === '-') return subtract(numArray);
-  if (operator === 'x') return multiply(numArray);
-  if (operator === '/') return divide(numArray);
-}
+    
+    if (typeof userInput === "number" && firstInput === null) {
+      //set first number
+      firstInput = `${userInput}`;
+      console.log("firstInput:", firstInput);
+      return firstInput;
+    } else if (
+      (typeof userInput === "number" || userInput === '.') &&
+      firstInput !== null &&
+      operator === null
+    ) { 
+      //add to first number
+      firstInput += `${userInput}`
+      console.log("firstInput:", firstInput);
+      return firstInput;
+    } else if (
+      firstInput !== null &&
+      operator === null &&
+      userInput === 'DEL'
+    ) {
+      firstInput = firstInput.slice(0, -1) 
+      return firstInput
+    } else if (
+      firstInput !== null &&
+      operator === null &&
+      typeof userInput === 'string' &&
+      userInput !== "="
+    ) {
+      //add operator
+      operator = userInput;
+      console.log("operator:", operator);
+      return operator
 
+    } else if (
+      firstInput !== null &&
+      operator !== null &&
+      secondInput === null &&
+      typeof userInput === "number"
+    ) {
+      //set second number
+      secondInput = `${userInput}`
+      console.log("secondInput:", secondInput);
+      return secondInput
 
-function getDisplayContent () {
-  return parseFloat(document.querySelector('.display').textContent);
-}
+    } else if (
+      (typeof userInput === "number" || userInput === '.') &&
+      firstInput !== null &&
+      operator !== null &&
+      secondInput !== null
+    ) { 
+      //add to second number
+      secondInput += `${userInput}`
+      console.log("secibdInput:", secondInput);
+      return secondInput;
+    } else if (
+      firstInput !== null &&
+      operator !== null &&
+      secondInput !== null &&
+      userInput === 'DEL'
+    ) { 
+      secondInput = secondInput.slice(0, -1) 
+      return secondInput
+    } else if (
+      userInput === "=" &&
+      firstInput !== null &&
+      operator !== null &&
+      secondInput !== null
+    ) {
+      //operate on first and second number, set result to first number
+      const lastExpression = operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
+      console.log('equals', lastExpression)
+      operator = null;
+      firstInput = lastExpression;
+      secondInput = null;
+      return lastExpression;
 
+    } else if (
+      firstInput !== null &&
+      operator !== null &&
+      secondInput !== null &&
+      ( userInput === "+" ||
+        userInput === "-" ||
+        userInput === "*" ||
+        userInput === "/"
+      )
+    ) {
+      //operate on first and second number, set result to first number, add operator as next operator to use
+      const lastExpression = operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
+      console.log('equals', lastExpression)
+      operator = userInput;
+      firstInput = lastExpression;
+      secondInput = null;
+      return lastExpression;
+    } else {
+      console.log("OH GOD WHY")
+    }
 
-function clearDisplayContent () {
-  document.querySelector('.display').textContent = '';
-  document.querySelector('.decimal').classList.remove('used');
-  /*must remove used class to ensure the decimal can be used as first input 
-    after being cleared */
-}
+    
+  }
 
-function displayOutput(nextOperator, numArray) {
-  const display = document.querySelector('.display');
+  function clear() {
+    firstInput = null
+    operator = null
+    secondInput = null
+  }
+
+  return { input, clear };
+})();
+
+const screen = document.querySelector('.screen')
+const numbers = document.querySelector('.numbers')
+const operators = document.querySelector('.operators')
+const clearBtn = document.querySelector('.clear')
+const deleteBtn = document.querySelector('.delete')
+
+numbers.addEventListener('click', (e) => {
+  const number = e.target.textContent;
+  if (number === '.') {
+    screen.textContent = calculator.input(number)
+  } else {
+    screen.textContent = calculator.input(Number.parseInt(number))
+  }
   
-  display.classList.add('output');
-  return display.textContent = operate(nextOperator, numArray);
-}
+})
 
-function allowNumInput() {
-  const numPad = document.querySelectorAll('.num');
-  
-  numPad.forEach( num => num.addEventListener('click', (num) => {
-    const display = document.querySelector('.display');
-    const decimal = document.querySelector('.decimal');
-    const negative = document.querySelector('.negative');
-    const numContent = num.target.textContent;
-    const deleteBtn = document.querySelector('.delete');
-    //deleteBtn is part of numpad, as it's functionality makes most sense here.
-    
-    if (display.classList.contains('output')) {
-      display.classList.remove('output');
-      clearDisplayContent();
-    }
-    
-    if (numContent === 'DEL') {
-      display.textContent = display.textContent.slice(0, -1);
-      display.textContent.includes('.') ? decimal.classList.add('used') : 
-                                          decimal.classList.remove('used');
-      return;
-    }
-    /*deletes last character. Must include decimal check to ensure decimal isn't
-      deactivated prematurely*/
-    
-    if (decimal.classList.contains('used') && numContent === '.') return;
-    //doesn't allow 2nd use of decimal button.
-    
-    if (!negative.classList.contains('active') && numContent === '+/-') {
-      display.textContent = display.textContent.padStart(display.textContent.length + 1, '-');
-      negative.classList.add('active');
-      return;
-    } else if (negative.classList.contains('active') && numContent === '+/-') {
-      display.textContent = display.textContent.slice(1);
-      negative.classList.remove('active');
-      return;
-    }
-    /*appends/removes '-' from the front of the display. Overrides default behavior
-      of adding the button's textContent.*/
-    
-    
-    display.textContent += numContent;
-    display.textContent.includes('.') ? decimal.classList.add('used') : 
-                            decimal.classList.remove('used');
-  }));
-}
-//having trouble with assigning display to equal display.textContent.
-//Theory: if textContent === '', display = null. This might prohibit += operations.
+operators.addEventListener('click', (e) => {
+  screen.textContent = calculator.input(e.target.textContent)
+})
 
-function allowFunctionInput () {
-  const functionBtns = document.querySelectorAll('.function');
-  const display = document.querySelector('.display');
-  let numArray= []
-  let operator = '';
-  let nextOperator = '';
-  let lastSolution = '';
-  
-  functionBtns.forEach( btn => btn.addEventListener('click', (btn) => {
-    
-    operator = btn.target.textContent;  
-    
-    if ( operator === '/' || operator === 'x' || operator === '-' || operator === '+') {
-      if (numArray.length === 0) {
-        
-        numArray[0] = getDisplayContent();
-        
-        if (numArray.includes(NaN)) return numArray = [];
-        
-        clearDisplayContent();
-        nextOperator = operator;
-        //asigns first number of array
-      } else if (numArray.length === 1) {
-        numArray[1] = getDisplayContent();
-        
-        if (numArray.includes(NaN)) return numArray.length = 1;
-        clearDisplayContent();
-        
-        if (isNaN(operate(nextOperator, numArray))) {
-          display.textContent = "No way, José"
-          display.classList.add('output');
-          numArray.length = 0;
-          operator = '';
-          nextOperator = '';
-          lastSolution = '';
-          return;
-        } else {
-          lastSolution = displayOutput(nextOperator, numArray);//operate(nextOperator, numArray);
-          nextOperator = operator;
-        }
-        //assigns second number of array, outputs solution, then saves it as last solution
-      } else if (numArray.length === 2) {
-        numArray[0] = lastSolution;
-        
-        if (!display.classList.contains('output')) {
-          numArray[1] = getDisplayContent();
-          if (numArray.includes(NaN)) return;
-        } 
-        
-        if (isNaN(operate(nextOperator, numArray))) {
-          display.textContent = "No way, José"
-          display.classList.add('output');
-          numArray.length = 0;
-          operator = '';
-          nextOperator = '';
-          lastSolution = '';
-          return;
-        } else {
-          lastSolution = displayOutput(nextOperator, numArray);//operate(nextOperator, numArray);
-          nextOperator = operator;
-        }
-        //assigns 1st number to last solution, 2nd number to last number used or 
-        //user input, outputs solution, then saves it as last solution.
-      }
-    } else if (operator === '=') {
-      if (numArray.length === 1) {
-        numArray[1] = getDisplayContent();
-        
-        if (numArray.includes(NaN)) return numArray.length = 1;
-        
-        if (isNaN(operate(nextOperator, numArray))) {
-          display.textContent = "No way, José"
-          display.classList.add('output');
-          numArray.length = 0;
-          operator = '';
-          nextOperator = '';
-          lastSolution = '';
-          return;
-        } else {
-          lastSolution = displayOutput(nextOperator, numArray); //operate(nextOperator, numArray);
-          numArray.length = 0;
-        }
-        
-      } else if (numArray.length === 2) {
-        numArray[0] = lastSolution;
-        numArray[1] = getDisplayContent();
-        console.log(numArray);
-        
-        if (isNaN(operate(nextOperator, numArray))) {
-          display.textContent = "No way, José"
-          display.classList.add('output');
-          numArray.length = 0;
-          operator = '';
-          nextOperator = '';
-          lastSolution = '';
-          return;
-        } else {
-          lastSolution = displayOutput(nextOperator, numArray);
-          nextOperator = nextOperator;
-          numArray.length = 0;
-        }
-        
-      }
-      
-      return;
-    } else if (operator === 'CLEAR') {
-      numArray.length = 0;
-      operator = '';
-      nextOperator = '';
-      lastSolution = '';
-      clearDisplayContent();
-      return;
-    }
-  }));
-}
+clearBtn.addEventListener('click', () => {
+  screen.textContent = ''
+  calculator.clear()
+})
 
-function keyboardInput() {
-  window.addEventListener('keydown', (num) => {
-   key = document.querySelector(`button[data-key="${num.keyCode}"]`);
-   key.click();
-  });
-}
-
-allowNumInput();
-allowFunctionInput();
-keyboardInput();
-
-//input1 -> operator -> input2 -> operator/equals => input1 -> output input1 ...repeat
-//can use leftover input2 to continue doing the operation on every equal operator press.
-//reassign input two only after additional outputs? Clear button should allow user to choose input1 again. (clear the array)
-//add a -/+ button?
+deleteBtn.addEventListener('click', (e) => {
+  screen.textContent = calculator.input(e.target.textContent)
+})
