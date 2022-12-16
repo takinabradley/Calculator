@@ -86,6 +86,18 @@ const calculator = (function () {
       firstInput !== null &&
       operator !== null &&
       secondInput === null &&
+      typeof userInput === 'string' &&
+      userInput !== '='
+    ) {
+      //if first number and operator is set, but the second number is not set, and an operator other than '=' is pressed again
+      //change operator
+      operator = userInput
+      console.log('operator changed to:', operator)
+      return operator
+    } else if (
+      firstInput !== null &&
+      operator !== null &&
+      secondInput === null &&
       typeof userInput === "number"
     ) {
       //if a number is chosen, and the first number and operator have been set  
