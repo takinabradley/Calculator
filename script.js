@@ -3,45 +3,45 @@ const calculator = (function () {
   let secondInput = null;
   let operator = null;
 
-  function add(...nums) {
+  function _add(...nums) {
     return nums.reduce((total, num) => {
       return total + num;
     }, 0);
   }
 
-  function subtract(...nums) {
+  function _subtract(...nums) {
     return nums.reduce((total, num, index) => {
       if (index === 0) return total;
       return total - num;
     }, nums[0]);
   }
 
-  function divide(...nums) {
+  function _divide(...nums) {
     return nums.reduce((total, num, index) => {
       if (index === 0) return total;
       return total / num;
     }, nums[0]);
   }
 
-  function multiply(...nums) {
+  function _multiply(...nums) {
     return nums.reduce((total, num) => {
       return total * num;
     }, 1);
   }
 
-  function operate(operator, ...nums) {
+  function _operate(operator, ...nums) {
     if (operator === "+") {
-      return add(...nums);
+      return _add(...nums);
     } else if (operator === "-") {
-      return subtract(...nums);
+      return _subtract(...nums);
     } else if (operator === "*") {
-      return multiply(...nums);
+      return _multiply(...nums);
     } else if (operator === "/") {
-      return divide(...nums);
+      return _divide(...nums);
     }
   }
 
-  function isDividingByZero() {
+  function _isDividingByZero() {
     //notice we parse string values to a number value
     if (
       Number.parseFloat(firstInput) === 0 && 
@@ -147,13 +147,13 @@ const calculator = (function () {
     ) {
       //if the '=' button is pressed and all other values have been set             
       //operate on first and second number, set result to first number
-      if(isDividingByZero()) {
+      if(_isDividingByZero()) {
         //reset calc if user tries to divide by 0
         clear()
         return "CAN'T DO THAT"
       }
       //notice we parse string values to a number value
-      const lastExpression = operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
+      const lastExpression = _operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
       console.log('equals', lastExpression)
       operator = null;
       firstInput = lastExpression;
@@ -171,13 +171,13 @@ const calculator = (function () {
     ) {
       //if an operator other than '=' is choen, and other values have been set
       //operate on first and second number, set result to first number, add operator as next operator to use
-      if(isDividingByZero()) {
+      if(_isDividingByZero()) {
         //reset calc if user tries to divide by 0
         clear()
         return "CAN'T DO THAT"
       }
       //notice we parse string values to a number value
-      const lastExpression = operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
+      const lastExpression = _operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
       console.log('equals', lastExpression)
       operator = userInput;
       firstInput = lastExpression;
