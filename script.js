@@ -41,11 +41,22 @@ const calculator = (function () {
     }
   }
 
+  function isDividingByZero() {
+    if (
+      Number.parseFloat(firstInput) === 0 && 
+      Number.parseFloat(secondInput) === 0 &&
+      operator === '/'
+    ) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   // Logic for when to actually call operate, not mixed into DOM code
   function input(userInput) {
-    console.log('userInput:', userInput)
+    console.log('userInput:', userInput, typeof userInput)
 
-    
     if (typeof userInput === "number" && firstInput === null) {
       //if a number is entered and the first number is not set
       //set first number
@@ -89,7 +100,8 @@ const calculator = (function () {
       typeof userInput === 'string' &&
       userInput !== '='
     ) {
-      //if first number and operator is set, but the second number is not set, and an operator other than '=' is pressed again
+      /* if first number and operator is set, but the second number is not set, 
+        and an operator other than '=' is pressed again */
       //change operator
       operator = userInput
       console.log('operator changed to:', operator)
@@ -132,8 +144,13 @@ const calculator = (function () {
       operator !== null &&
       secondInput !== null
     ) {
-      //if the '=' button is pressed and other values have been set             
+      //if the '=' button is pressed and all other values have been set             
       //operate on first and second number, set result to first number
+      if(isDividingByZero()) {
+        //reset calc if user tries to divide by 0
+        clear()
+        return "CAN'T DO THAT"
+      }
       const lastExpression = operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
       console.log('equals', lastExpression)
       operator = null;
@@ -152,6 +169,11 @@ const calculator = (function () {
     ) {
       //if an operator other than '=' is choen, and other values have been set
       //operate on first and second number, set result to first number, add operator as next operator to use
+      if(isDividingByZero()) {
+        //reset calc if user tries to divide by 0
+        clear()
+        return "CAN'T DO THAT"
+      }
       const lastExpression = operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
       console.log('equals', lastExpression)
       operator = userInput;
@@ -174,24 +196,28 @@ const calculator = (function () {
   return { input, clear };
 })();
 
-const screen = document.querySelector('.screen')
-const numbers = document.querySelector('.numbers')
-const operators = document.querySelector('.operators')
+const screen = document.querySelector('.display')
+const numbers = document.querySelectorAll('.num')
+const operators = document.querySelectorAll('.function')
 const clearBtn = document.querySelector('.clear')
 const deleteBtn = document.querySelector('.delete')
 
-numbers.addEventListener('click', (e) => {
-  const number = e.target.textContent;
-  if (number === '.') {
-    screen.textContent = calculator.input(number)
-  } else {
-    screen.textContent = calculator.input(Number.parseInt(number))
-  }
-  
+console.log(numbers)
+numbers.forEach(num => {
+  num.addEventListener('click', (e) => {
+    const number = e.target.textContent;
+    if (number === '.') {
+      screen.textContent = calculator.input(number)
+    } else {
+      screen.textContent = calculator.input(Number.parseInt(number))
+    }
+  })
 })
 
-operators.addEventListener('click', (e) => {
-  screen.textContent = calculator.input(e.target.textContent)
+operators.forEach(operator => {
+  operator.addEventListener('click', (e) => {
+    screen.textContent = calculator.input(e.target.textContent)
+  })
 })
 
 clearBtn.addEventListener('click', () => {
