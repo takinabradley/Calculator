@@ -42,6 +42,7 @@ const calculator = (function () {
   }
 
   function isDividingByZero() {
+    //notice we parse string values to a number value
     if (
       Number.parseFloat(firstInput) === 0 && 
       Number.parseFloat(secondInput) === 0 &&
@@ -60,7 +61,7 @@ const calculator = (function () {
     if (typeof userInput === "number" && firstInput === null) {
       //if a number is entered and the first number is not set
       //set first number
-      firstInput = `${userInput}`;
+      firstInput = `${userInput}`; //saved as string so it can be modified later
       console.log("firstInput:", firstInput);
       return firstInput;
     } else if (
@@ -70,7 +71,7 @@ const calculator = (function () {
     ) { 
       //if a number is entered and the first number has been set, and an operator hasn't been chosen
       //add to first number
-      firstInput += `${userInput}`
+      firstInput += `${userInput}` //appended to userInput as a string
       console.log("firstInput:", firstInput);
       return firstInput;
     } else if (
@@ -80,7 +81,7 @@ const calculator = (function () {
     ) {
       //if first number has been set, and an operator is not chosen, and 'DEL' key is pressed
       //delete from first input
-      firstInput = firstInput.slice(0, -1) 
+      firstInput = firstInput.slice(0, -1)  //since it's a string, we can remove last digits
       return firstInput
     } else if (
       firstInput !== null &&
@@ -114,7 +115,7 @@ const calculator = (function () {
     ) {
       //if a number is chosen, and the first number and operator have been set  
       //set second number
-      secondInput = `${userInput}`
+      secondInput = `${userInput}` //see firstInput logic for why it's saved as string.
       console.log("secondInput:", secondInput);
       return secondInput
     } else if (
@@ -151,6 +152,7 @@ const calculator = (function () {
         clear()
         return "CAN'T DO THAT"
       }
+      //notice we parse string values to a number value
       const lastExpression = operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
       console.log('equals', lastExpression)
       operator = null;
@@ -174,6 +176,7 @@ const calculator = (function () {
         clear()
         return "CAN'T DO THAT"
       }
+      //notice we parse string values to a number value
       const lastExpression = operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
       console.log('equals', lastExpression)
       operator = userInput;
