@@ -47,6 +47,7 @@ const calculator = (function () {
 
     
     if (typeof userInput === "number" && firstInput === null) {
+      //if a number is entered and the first number is not set
       //set first number
       firstInput = `${userInput}`;
       console.log("firstInput:", firstInput);
@@ -56,6 +57,7 @@ const calculator = (function () {
       firstInput !== null &&
       operator === null
     ) { 
+      //if a number is entered and the first number has been set, and an operator hasn't been chosen
       //add to first number
       firstInput += `${userInput}`
       console.log("firstInput:", firstInput);
@@ -65,6 +67,8 @@ const calculator = (function () {
       operator === null &&
       userInput === 'DEL'
     ) {
+      //if first number has been set, and an operator is not chosen, and 'DEL' key is pressed
+      //delete from first input
       firstInput = firstInput.slice(0, -1) 
       return firstInput
     } else if (
@@ -73,28 +77,29 @@ const calculator = (function () {
       typeof userInput === 'string' &&
       userInput !== "="
     ) {
+      //if first number is set, and an operator other than '=' is chosen        
       //add operator
       operator = userInput;
       console.log("operator:", operator);
       return operator
-
     } else if (
       firstInput !== null &&
       operator !== null &&
       secondInput === null &&
       typeof userInput === "number"
     ) {
+      //if a number is chosen, and the first number and operator have been set  
       //set second number
       secondInput = `${userInput}`
       console.log("secondInput:", secondInput);
       return secondInput
-
     } else if (
       (typeof userInput === "number" || userInput === '.') &&
       firstInput !== null &&
       operator !== null &&
       secondInput !== null
     ) { 
+      //if a number is chosen after the second number has been set              
       //add to second number
       secondInput += `${userInput}`
       console.log("secibdInput:", secondInput);
@@ -105,6 +110,8 @@ const calculator = (function () {
       secondInput !== null &&
       userInput === 'DEL'
     ) { 
+      //if the 'DEL' key is pressed after the second number has been set
+      //remove from second number
       secondInput = secondInput.slice(0, -1) 
       return secondInput
     } else if (
@@ -113,6 +120,7 @@ const calculator = (function () {
       operator !== null &&
       secondInput !== null
     ) {
+      //if the '=' button is pressed and other values have been set             
       //operate on first and second number, set result to first number
       const lastExpression = operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
       console.log('equals', lastExpression)
@@ -120,7 +128,6 @@ const calculator = (function () {
       firstInput = lastExpression;
       secondInput = null;
       return lastExpression;
-
     } else if (
       firstInput !== null &&
       operator !== null &&
@@ -131,6 +138,7 @@ const calculator = (function () {
         userInput === "/"
       )
     ) {
+      //if an operator other than '=' is choen, and other values have been set
       //operate on first and second number, set result to first number, add operator as next operator to use
       const lastExpression = operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
       console.log('equals', lastExpression)
