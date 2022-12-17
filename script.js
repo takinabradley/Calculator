@@ -204,15 +204,47 @@ const numbers = document.querySelectorAll('.num')
 const operators = document.querySelectorAll('.function')
 const clearBtn = document.querySelector('.clear')
 const deleteBtn = document.querySelector('.delete')
+const negativeBtn = document.querySelector('.negative')
+let negativeActive = false;
 
-console.log(numbers)
+function isOperator(string) {
+  if(string === '+' || string === '-' || string === '/' || string === '*') return true
+  return false
+}
+
+function decimalAllowed(screenText) {
+  //if there there is a number on screen, and a decimal is not already used
+  if(screenText !== '' && !screenText.includes('.') && !isOperator(screenText)) {
+    return true
+  } else {
+    return false
+  }
+}
+
+function negativeAllowed(screenText) {
+  //if nothing is on screen, or an operator is on screen allow use of negative button
+  if(screenText === '' || isOperator(screenText)) {
+    return true
+  } else {
+    return false
+  }
+}
+
 numbers.forEach(num => {
   num.addEventListener('click', (e) => {
     const number = e.target.textContent;
-    if (number === '.') {
+    const screenText = screen.textContent
+    
+    
+    if (number === '.' && decimalAllowed(screenText)) {
       screen.textContent = calculator.input(number)
-    } else {
+    } else if(number !== '.' && !negativeActive){
+      //passes a positive number to calculator
       screen.textContent = calculator.input(Number.parseInt(number))
+    } else if(number !== '.' && negativeActive) {
+      //passes a negative number to calculator
+      screen.textContent = calculator.input(-Number.parseInt(number))
+      negativeActive = false //disables negative button after any number input. Prevents numbers like -12 from being inputed as -1-2
     }
   })
 })
@@ -229,5 +261,15 @@ clearBtn.addEventListener('click', () => {
 })
 
 deleteBtn.addEventListener('click', (e) => {
-  screen.textContent = calculator.input(e.target.textContent)
+  screen.textContent = calculator.input('DEL')
 })
+
+negativeBtn.addEventListener('click', () => {
+  if(negativeAllowed(screen.textContent) && negativeActive === false) {
+    negativeActive = !negativeActive //toggle negative button
+  }
+})
+
+//bugs:
+//pressing negative, a number, then DEL allows firstInput to become '-' (I think)
+//this method makes it very hard to make visual indicators.
