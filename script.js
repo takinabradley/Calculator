@@ -1,275 +1,144 @@
-const calculator = (function () {
-  let firstInput = null;
-  let secondInput = null;
-  let operator = null;
-
-  function _add(...nums) {
-    return nums.reduce((total, num) => {
-      return total + num;
-    }, 0);
-  }
-
-  function _subtract(...nums) {
-    return nums.reduce((total, num, index) => {
-      if (index === 0) return total;
-      return total - num;
-    }, nums[0]);
-  }
-
-  function _divide(...nums) {
-    return nums.reduce((total, num, index) => {
-      if (index === 0) return total;
-      return total / num;
-    }, nums[0]);
-  }
-
-  function _multiply(...nums) {
-    return nums.reduce((total, num) => {
-      return total * num;
-    }, 1);
-  }
-
-  function _operate(operator, ...nums) {
-    if (operator === "+") {
-      return _add(...nums);
-    } else if (operator === "-") {
-      return _subtract(...nums);
-    } else if (operator === "*") {
-      return _multiply(...nums);
-    } else if (operator === "/") {
-      return _divide(...nums);
-    }
-  }
-
-  function _isDividingByZero() {
-    //notice we parse string values to a number value
-    if (
-      Number.parseFloat(firstInput) === 0 && 
-      Number.parseFloat(secondInput) === 0 &&
-      operator === '/'
-    ) {
-      return true
-    } else {
-      return false
-    }
-  }
-
-  // Logic for when to actually call operate, not mixed into DOM code
-  function input(userInput) {
-    console.log('userInput:', userInput, typeof userInput)
-
-    if (typeof userInput === "number" && firstInput === null) {
-      //if a number is entered and the first number is not set
-      //set first number
-      firstInput = `${userInput}`; //saved as string so it can be modified later
-      console.log("firstInput:", firstInput);
-      return firstInput;
-    } else if (
-      (typeof userInput === "number" || userInput === '.') &&
-      firstInput !== null &&
-      operator === null
-    ) { 
-      //if a number is entered and the first number has been set, and an operator hasn't been chosen
-      //add to first number
-      firstInput += `${userInput}` //appended to userInput as a string
-      console.log("firstInput:", firstInput);
-      return firstInput;
-    } else if (
-      firstInput !== null &&
-      operator === null &&
-      userInput === 'DEL'
-    ) {
-      //if first number has been set, and an operator is not chosen, and 'DEL' key is pressed
-      //delete from first input
-      firstInput = firstInput.slice(0, -1)  //since it's a string, we can remove last digits
-      return firstInput
-    } else if (
-      firstInput !== null &&
-      operator === null &&
-      typeof userInput === 'string' &&
-      userInput !== "="
-    ) {
-      //if first number is set, and an operator other than '=' is chosen        
-      //add operator
-      operator = userInput;
-      console.log("operator:", operator);
-      return operator
-    } else if (
-      firstInput !== null &&
-      operator !== null &&
-      secondInput === null &&
-      typeof userInput === 'string' &&
-      userInput !== '='
-    ) {
-      /* if first number and operator is set, but the second number is not set, 
-        and an operator other than '=' is pressed again */
-      //change operator
-      operator = userInput
-      console.log('operator changed to:', operator)
-      return operator
-    } else if (
-      firstInput !== null &&
-      operator !== null &&
-      secondInput === null &&
-      typeof userInput === "number"
-    ) {
-      //if a number is chosen, and the first number and operator have been set  
-      //set second number
-      secondInput = `${userInput}` //see firstInput logic for why it's saved as string.
-      console.log("secondInput:", secondInput);
-      return secondInput
-    } else if (
-      (typeof userInput === "number" || userInput === '.') &&
-      firstInput !== null &&
-      operator !== null &&
-      secondInput !== null
-    ) { 
-      //if a number is chosen after the second number has been set              
-      //add to second number
-      secondInput += `${userInput}`
-      console.log("secibdInput:", secondInput);
-      return secondInput;
-    } else if (
-      firstInput !== null &&
-      operator !== null &&
-      secondInput !== null &&
-      userInput === 'DEL'
-    ) { 
-      //if the 'DEL' key is pressed after the second number has been set
-      //remove from second number
-      secondInput = secondInput.slice(0, -1) 
-      return secondInput
-    } else if (
-      userInput === "=" &&
-      firstInput !== null &&
-      operator !== null &&
-      secondInput !== null
-    ) {
-      //if the '=' button is pressed and all other values have been set             
-      //operate on first and second number, set result to first number
-      if(_isDividingByZero()) {
-        //reset calc if user tries to divide by 0
-        clear()
-        return "CAN'T DO THAT"
-      }
-      //notice we parse string values to a number value
-      const lastExpression = _operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
-      console.log('equals', lastExpression)
-      operator = null;
-      firstInput = lastExpression;
-      secondInput = null;
-      return lastExpression;
-    } else if (
-      firstInput !== null &&
-      operator !== null &&
-      secondInput !== null &&
-      ( userInput === "+" ||
-        userInput === "-" ||
-        userInput === "*" ||
-        userInput === "/"
-      )
-    ) {
-      //if an operator other than '=' is choen, and other values have been set
-      //operate on first and second number, set result to first number, add operator as next operator to use
-      if(_isDividingByZero()) {
-        //reset calc if user tries to divide by 0
-        clear()
-        return "CAN'T DO THAT"
-      }
-      //notice we parse string values to a number value
-      const lastExpression = _operate(operator, Number.parseFloat(firstInput), Number.parseFloat(secondInput));
-      console.log('equals', lastExpression)
-      operator = userInput;
-      firstInput = lastExpression;
-      secondInput = null;
-      return lastExpression;
-    } else {
-      console.log("OH GOD WHY")
-    }
-
-    
-  }
-
-  function clear() {
-    firstInput = null
-    operator = null
-    secondInput = null
-  }
-
-  return { input, clear };
-})();
-
 const screen = document.querySelector('.display')
 const numbers = document.querySelectorAll('.num')
 const operators = document.querySelectorAll('.function')
 const clearBtn = document.querySelector('.clear')
 const deleteBtn = document.querySelector('.delete')
 const negativeBtn = document.querySelector('.negative')
-let negativeActive = false;
+let num1 = null
+let num2 = null
+let operator = null
+let displayValue = ''
 
-function isOperator(string) {
-  if(string === '+' || string === '-' || string === '/' || string === '*') return true
-  return false
+function add(...nums) {
+  return nums.reduce((total, num) => {
+    return total + num;
+  }, 0);
 }
 
-function decimalAllowed(screenText) {
-  //if there there is a number on screen, and a decimal is not already used
-  if(screenText !== '' && !screenText.includes('.') && !isOperator(screenText)) {
-    return true
-  } else {
-    return false
+function subtract(...nums) {
+  return nums.reduce((total, num, index) => {
+    if (index === 0) return total;
+    return total - num;
+  }, nums[0]);
+}
+
+function divide(...nums) {
+  return nums.reduce((total, num, index) => {
+    if (index === 0) return total;
+    return total / num;
+  }, nums[0]);
+}
+
+function multiply(...nums) {
+  return nums.reduce((total, num) => {
+    return total * num;
+  }, 1);
+}
+
+function operate(operator, ...nums) {
+  if (operator === "+") {
+    return add(...nums);
+  } else if (operator === "-") {
+    return subtract(...nums);
+  } else if (operator === "x") {
+    return multiply(...nums);
+  } else if (operator === "/") {
+    return divide(...nums);
   }
 }
 
-function negativeAllowed(screenText) {
-  //if nothing is on screen, or an operator is on screen allow use of negative button
-  if(screenText === '' || isOperator(screenText)) {
-    return true
+function allowDecimal(screenText) {
+  if(screenText.includes('.')) return false
+  return true
+}
+
+function toggleNegative() {
+  if(screen.textContent.includes('-')) {
+    displayValue = displayValue.slice(1)
+    screen.textContent = displayValue
   } else {
-    return false
+    displayValue = '-' + displayValue
+    screen.textContent = displayValue
   }
 }
 
-numbers.forEach(num => {
-  num.addEventListener('click', (e) => {
-    const number = e.target.textContent;
-    const screenText = screen.textContent
-    
-    
-    if (number === '.' && decimalAllowed(screenText)) {
-      screen.textContent = calculator.input(number)
-    } else if(number !== '.' && !negativeActive){
-      //passes a positive number to calculator
-      screen.textContent = calculator.input(Number.parseInt(number))
-    } else if(number !== '.' && negativeActive) {
-      //passes a negative number to calculator
-      screen.textContent = calculator.input(-Number.parseInt(number))
-      negativeActive = false //disables negative button after any number input. Prevents numbers like -12 from being inputed as -1-2
-    }
-  })
-})
+function displayNumbers(e) {
+  //don't allow decimal if one is already used
+  if(e.target.textContent === '.' && !allowDecimal(displayValue)) return
+  //toggle the negative symbol when toggleNegative is pressed.
+  if(e.target.textContent === '+/-') {
+    toggleNegative()
+    return;
+  }
+  //else just display the numbers
+  displayValue += e.target.textContent
+  screen.textContent = displayValue
+}
 
-operators.forEach(operator => {
-  operator.addEventListener('click', (e) => {
-    screen.textContent = calculator.input(e.target.textContent)
-  })
-})
+function removeNumbers() {
+  displayValue = displayValue.slice(0, displayValue.length - 1)
+  screen.textContent = displayValue
+}
 
-clearBtn.addEventListener('click', () => {
+function clear() {
+  displayValue = ''
   screen.textContent = ''
-  calculator.clear()
-})
+  num1 = null
+  num2 = null
+  operator = null
+}
 
-deleteBtn.addEventListener('click', (e) => {
-  screen.textContent = calculator.input('DEL')
-})
+function handleInput(e) {
+  const currentOperator = e.target.textContent
+  
+  console.log(displayValue)
+  if(displayValue === '-') return
+  if(num1 === null && operator === null && currentOperator !== '=') {
+    //if num1 is not set and operator is not set, set both
+    num1 = displayValue
+    operator = currentOperator
+    displayValue = ''
+    console.log('first operator press:', 'num1:', num1, 'operator:', operator, 'num2:', num2)
+    return
+  } else if(num1 !== null && operator === null && currentOperator !== '=') {
+    //if num1 is set, but operator isn't, set operator
+    operator = currentOperator;
+  } else if (num1 !== null && operator !== null && currentOperator !== '=') {
+    //if num1 and operator are set, and currentOperator isn't '=', calculate and set operator to current operator for next calculation
+    num2 = displayValue
+    console.log('second operator press', 'num1:', num1, 'operator:', operator, 'num2:', num2)
+    const lastExpression = operate(operator, +num1, +num2)
+    screen.textContent = lastExpression
 
-negativeBtn.addEventListener('click', () => {
-  if(negativeAllowed(screen.textContent) && negativeActive === false) {
-    negativeActive = !negativeActive //toggle negative button
+    num1 = lastExpression
+    num2 = null
+    operator = currentOperator
+    displayValue = ''
+    console.log('second operator press after calculation', 'num1:', num1, 'operator:', operator, 'num2:', num2)
+    return
+  } else if (num1 !== null && num2 === null && operator !== null && currentOperator === '=') {
+    //if num1 and operator are set, and currentOperator is '=', calculate, set num1, and clear everything else.
+    num2 = displayValue
+    console.log('equal press', 'num1:', num1, 'operator:', operator, 'num2:', num2)
+    const lastExpression = operate(operator, +num1, +num2)
+    screen.textContent = lastExpression
+   
+    num1 = lastExpression
+    num2 = null
+    operator = null
+    displayValue = ''
+    console.log('equal press after calculation', 'num1:', num1, 'operator:', operator, 'num2:', num2)
+    return
   }
+  console.log('unhandled')
+}
+
+numbers.forEach(num => num.addEventListener('click', displayNumbers))
+
+operators.forEach(operatorBtn => {
+  operatorBtn.addEventListener('click', handleInput)
 })
 
-//bugs:
-//pressing negative, a number, then DEL allows firstInput to become '-' (I think)
-//this method makes it very hard to make visual indicators.
+deleteBtn.addEventListener('click', removeNumbers)
+
+clearBtn.addEventListener('click', clear)
